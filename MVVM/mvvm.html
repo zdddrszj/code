@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>双向数据绑定原理</title>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" wx-model="msg" />
+      <input type="text" wx-model="name" />
+      {{msg}} {{name}}
+      <div>双向数据绑定</div>
+      <div>{{name}}<div>123</div></div>
+    </div>
+    <script>
+      let reg = /\{\{([^}]*)\}\}/g
+      let obj = {
+        msg: new ViewModule('111'),
+        name: new ViewModule('222')
+      }
+      function ViewModule (data) {
+        this.data = data
+        this.nodes = []
+      }
+      //　将数据和节点挂载在一起
+      ViewModule.prototype.bindNode = function (node) {
+        this.nodes.push(node)
+        // console.log(this.nodes)
+      }
+      //　根据obj数据，修改节点
+      ViewModule.prototype.update = function () {
+        this.nodes.forEach(node => {
+          if (node.nodeType === 1) {
+            node.value = this.data
+          } else if (node.nodeType === 3) { // {{msg}} {{name}}
+            node.textContent = node.my.replace(reg, function () {
+              return obj[arguments[1]].data
+            })
+          }
+        })
+      }
+      ViewModule.prototype.setVal = function (newVal) {
+        // 如果数据修改值和原来值相等，不做处理
+        if (newVal !== this.data) {
+          this.data = newVal
+          this.update()
+        }
+      }
+      ViewModule.prototype.getVal = function () {
+        return this.data
+      }
+      function compile (el) {
+        let ele = document.querySelector(el)
+        //　不直接操作节点，引起页面回流，影响性能
+        let fragment = document.createDocumentFragment()
+        // 取ele下的第一个元素，直到取完所有子节点，放到fragment文档片段中
+        let child = null
+        while (child = ele.firstChild) {
+          fragment.appendChild(child)
+        }
+        //递归判断节点类型
+        function replace (fragment) {
+          Array.from(fragment.childNodes).forEach(node => {
+            //　元素 输入框
+            if (node.nodeType === 1) {
+              // attributes: [type, wx-model]
+              Array.from(node.attributes).forEach(attr => {
+                // {name: 'wx-model', value: 'msg'}  {name: 'wx-model', value: 'name'}
+                let { name, value } = attr
+                if (name.includes('wx-')) {
+                  // console.log(node)
+                  // 给数据绑定node节点
+                  obj[value].bindNode(node)
+                  node.addEventListener('input', function (e) {
+                    obj[value].setVal(e.target.value)
+                  })
+                }
+              })
+            }
+
+            //　文本
+            // {{msg}} {{name}}
+            let text = node.textContent
+            if (node.nodeType === 3 && reg.test(text)) {
+              //　自定义属性：缓存textContent，第一次匹配后node的textContent({{msg}}{{name}})已被数据替换
+              node.my = text
+              // 正则结果: [{{msg}}, msg, ...]
+              text.replace(reg, function () {
+                // 给数据绑定node节点
+                obj[arguments[1]].bindNode(node)
+              })
+            }
+
+            // 如果有子节点
+            if (node.childNodes.length) {
+              replace(node)
+            }
+          })
+        }
+        replace(fragment)
+        Object.keys(obj).forEach(key => {
+          obj[key].update()
+        })
+        ele.appendChild(fragment)
+      }
+      compile('#app')
+    </script>
+  </body>
+</html>

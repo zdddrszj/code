@@ -1,0 +1,30 @@
+
+<html>
+  <head>
+    <title>vue双向数据绑定实现</title>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" v-model="msg" />
+      <input type="text" v-model="a.b" />
+      {{msg}} {{a.b}}
+      <div>双向数据绑定</div>
+      <div>{{msg}}<div>123</div></div>
+    </div>
+    <script src="./watcher.js"></script>
+    <script src="./observer.js"></script>
+    <script src="./compile.js"></script>
+    <script src="./mvvm.js"></script>
+    <script>
+      let vm = new MVVM ({
+        el: '#app',
+        data: {
+          msg: 'hello',
+          a: {
+            b: 1
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
