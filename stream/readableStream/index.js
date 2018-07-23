@@ -160,7 +160,7 @@ class ReadableStream extends EventEmitter {
     })
   }
   // 关闭可读流
-  destory (fd) {
+  destory () {
     if (typeof this.fd === 'number') {
       fs.close(this.fd, () => {
         this.emit('close')

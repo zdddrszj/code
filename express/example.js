@@ -3,6 +3,9 @@ let express = require('./index')
 let app = express()
 
 app.get('/name', function (req, res) {
+	console.log(req.path)
+	console.log(req.hostname)
+	console.log(req.query)
 	res.end('get name')
 })
 

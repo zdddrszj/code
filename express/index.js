@@ -85,6 +85,14 @@ function createApplication () {
     }
     app.routes.push(layer)
   }
+  // 封装一下基本参数
+  app.use(function (req, res, next) {
+    let { pathname, query } = url.parse(req.url, true)
+    req.path = pathname
+    req.query = query
+    req.hostname = req.headers['host'].split(':')[0]
+    next()
+  })
   app.listen = function () {
     let server = http.createServer(app)
     // arguments就是参数(3000, 'localhost', function () {})
