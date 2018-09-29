@@ -1,5 +1,5 @@
 import React from 'react'
-let { Provider, Consumer } = React.createContext()
+const { Provider, Consumer } = React.createContext()
 
 export {
   Provider,

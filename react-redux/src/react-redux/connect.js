@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Consumer } from './context'
 import { bindActionCreators } from '../redux'
 
-let connect = (mapStateToProps, mapDispatchToProps) => (Comp) => {
+const connect = (mapStateToProps, mapDispatchToProps) => (Comp) => {
   class Proxy extends Component {
     state = mapStateToProps(this.props.store.getState())
     componentDidMount () {

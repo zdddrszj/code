@@ -1,21 +1,21 @@
 
-let createStore = (reducer) => {
-  let state
+const createStore = (reducer) => {
+  let state = {}
   let listeners = []
 
-  let dispatch = (action) => {
+  const dispatch = (action) => {
     state = reducer(state, action)
     listeners.forEach(listener => listener())
   }
   // 订阅函数返回一个取消订阅的函数
-  let subscribe = (listener) => {
+  const subscribe = (listener) => {
     listeners.push(listener)
     return () => {
       listeners = listeners.filter(fn => fn !== listener)
     }
   }
 
-  let getState = () => state
+  const getState = () => state
 
   // 将状态改成默认值
   dispatch({type: '@INIT'})
@@ -27,7 +27,7 @@ let createStore = (reducer) => {
   }
 }
 
-let combineReducers = (reducers) => {
+const combineReducers = (reducers) => {
   return (state={}, action) => {
     let obj = {}
     for (let key in reducers) {
@@ -37,7 +37,7 @@ let combineReducers = (reducers) => {
   }
 }
 
-let bindActionCreators = (actions, dispatch) => {
+const bindActionCreators = (actions, dispatch) => {
   let obj = {}
   for (let key in actions) {
     obj[key] = (...args) => {
