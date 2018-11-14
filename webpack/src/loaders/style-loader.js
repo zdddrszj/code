@@ -1,12 +1,11 @@
 
-let loaderUtils=require("loader-utils")
-function loader(source) {} 
-loader.pitch = function (request) {
-  let style = `
-    var style = document.createElement("style");
-    style.innerHTML = require(${loaderUtils.stringifyRequest(this, "!!" + request)});
+function loader(source) {
+  let str = `
+    let style = document.createElement('style');
+    style.innerHTML = ${JSON.stringify(source)};
     document.head.appendChild(style);
   `
-  return style
-}
+  return str
+} 
+
 module.exports = loader
