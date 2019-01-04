@@ -28,5 +28,18 @@ class MyComponent extends React.Component {
   }
 }
 
+const numbers = [1,2,3,4]
+function NumberList(props) {
+  const numbers = props.numbers
+  return (
+    <ul>
+      {numbers.map(number =>
+        <li>{number}</li>
+      )}
+    </ul>
+  )
+}
+
 // ReactDom.render(element, document.getElementById('root'))
 ReactDom.render(<MyComponent value='world' age={9}></MyComponent>, document.getElementById('root'))
+ReactDom.render(<NumberList numbers={numbers}></NumberList>, document.getElementById('root2'))

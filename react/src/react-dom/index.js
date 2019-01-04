@@ -6,6 +6,7 @@ function render (vnode, container) {
 
 // 把虚拟dom渲染成真是dom
 function _render (vnode) {
+  console.log(vnode)
   if (util.isString(vnode) || util.isNumber(vnode)) {
     return document.createTextNode(vnode)
   }
@@ -31,6 +32,10 @@ function _render (vnode) {
 
   if (children) {
     children.forEach(child => {
+      // 如果child是一个数组（map结构）
+      if (util.isArray(child)) {
+        return child.forEach(c => render(c, element))
+      }
       render(child, element)
     })
   }
@@ -109,7 +114,7 @@ function isType (type) {
 }
 
 let util = {}
-let arr = ['String', 'Number', 'Object', 'Function', 'Null']
+let arr = ['String', 'Number', 'Object', 'Array', 'Function', 'Null']
 arr.forEach(t => {
   util['is' + t] = isType(t)
 })
