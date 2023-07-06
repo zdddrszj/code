@@ -22,7 +22,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "ejs": "^2.6.1",
+    "ejs": "^3.1.7",
     "less": "^3.8.1",
     "loader-utils": "^1.1.0",
     "schema-utils": "^1.0.0"
